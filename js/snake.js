@@ -1,17 +1,14 @@
-
-
 function Snake(){
   this.DIRS = ['n', 'e', 's', 'w'];
   this.MOVES = { n: [-1,0], e: [0,1], s: [1,0], w: [0,-1]};
-  this.direction = 'w';
+  this.direction = 'e';
   this.segments = [
-    [5,3],
-    [5,4],
     [5,5],
-    [5,6],
-    [5,7]
+    [5,4],
+    [5,3],
   ];
   this.oldTail = [0,0];
+  this.unitsToGrow = 0;
 }
 
 Snake.prototype.turn = function (dir) {
@@ -29,10 +26,20 @@ Snake.prototype.head = function(){
   return(this.segments[0]);
 };
 
+Snake.prototype.grow = function (num) {
+  this.unitsToGrow += num;
+};
+
 Snake.prototype.move = function () {
   var move = this.MOVES[this.direction];
   var newHead = this.plus(this.head(), move);
-  this.oldTail = this.segments.pop();
+
+  if (this.unitsToGrow > 0){
+    this.oldTail = null;
+    this.unitsToGrow -= 1;
+  } else {
+    this.oldTail = this.segments.pop();
+  }
   this.segments.unshift(newHead);
 };
 

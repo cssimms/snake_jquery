@@ -62,7 +62,8 @@
 	
 	function View($el){
 	  this.$el = $el;
-	  this.board = new Board(15);
+	  this.board = new Board(60);
+	  this.snake = this.board.snake;
 	  this.setupBoard();
 	  this.setKeyBindings();
 	  this.startGame();
@@ -72,10 +73,11 @@
 	  for (var i = 0; i < this.board.bound; i++){
 	    var $ul = $("<ul>");
 	    $ul.addClass("group");
+	    $ul.attr("row-num", i);
 	    for (var j = 0; j < this.board.bound; j++){
 	      var $li = $("<li>");
 	      $li.attr("pos", [i,j]);
-	      if (this.board.snake.segmentsInclude([i,j]))
+	      if (this.snake.segmentsInclude([i,j]))
 	        $li.addClass("snake");
 	      $ul.append($li);
 	    }
@@ -85,42 +87,54 @@
 	};
 	
 	View.prototype.render = function () {
-	  var headPos = this.board.snake.head();
-	  var oldTail = this.board.snake.oldTail;
+	  var headPos = this.snake.head();
+	  var oldTail = this.snake.oldTail;
+	  var apples = this.board.apples;
+	  var oldApples = this.board.oldApples;
 	
 	  $("li[pos='" + headPos + "']").addClass("snake");
-	  $("li[pos='" + oldTail + "']").removeClass("snake");
+	  if (oldTail){
+	    $("li[pos='" + oldTail + "']").removeClass("snake");
+	  }
+	  apples.forEach(function (apple){
+	    $("li[pos='" + apple + "']").addClass("apple");
+	  });
+	  oldApples.forEach(function (apple){
+	    $("li[pos='" + apple + "']").removeClass("apple");
+	  });
+	
 	};
 	
 	View.prototype.startGame = function () {
 	  var that = this;
-	  var animate = setInterval(function(){
-	    that.board.snake.move();
-	    that.checkOver(animate);
+	  var animation = setInterval(function(){
+	    that.snake.move();
+	    that.board.registerApples();
+	    that.checkOver(animation);
 	    that.render();
-	  }, 250);
+	  }, 200);
 	};
 	
 	View.prototype.setKeyBindings = function () {
 	  var that = this;
 	  key('left', function(){
-	    that.board.snake.turn('w');
+	    that.snake.turn('w');
 	  });
 	  key('right', function(){
-	    that.board.snake.turn('e');
+	    that.snake.turn('e');
 	  });
 	  key('up', function(){
-	    that.board.snake.turn('n');
+	    that.snake.turn('n');
 	  });
 	  key('down', function(){
-	    that.board.snake.turn('s');
+	    that.snake.turn('s');
 	  });
 	};
 	
-	View.prototype.checkOver = function (fn) {
+	View.prototype.checkOver = function (animation) {
 	  if (this.board.isOver()){
-	    clearInterval(fn);
-	    alert("youdeadson");
+	    clearInterval(animation);
+	    alert("You Lose!");
 	  }
 	};
 	
@@ -137,7 +151,37 @@
 	function Board(bound){
 	  this.snake = new Snake();
 	  this.bound = bound;
+	  this.numOfApples = 2;
+	  this.apples = [];
+	  this.oldApples = [];
+	  this.placeApples();
 	}
+	
+	Board.prototype.placeApples = function () {
+	  while (this.apples.length < this.numOfApples){
+	    this.apples.push(this.generateRandPos());
+	  }
+	};
+	
+	Board.prototype.generateRandPos = function () {
+	  var x = Math.floor(Math.random() * this.bound);
+	  var y = Math.floor(Math.random() * this.bound);
+	  return [x,y];
+	};
+	
+	Board.prototype.registerApples = function () {
+	  for (var i = 0; i < this.apples.length; i++){
+	    var appleX = this.apples[i][0];
+	    var appleY = this.apples[i][1];
+	    var head = this.snake.head();
+	
+	    if (appleX === head[0] && appleY === head[1]){
+	      this.snake.grow(3);
+	      this.oldApples.push(this.apples.splice(i, 1));
+	      this.placeApples();
+	    }
+	  }
+	};
 	
 	Board.prototype.isOver = function () {
 	  return (this.snake.isCollided() || this.edgeCollision());
@@ -145,8 +189,8 @@
 	
 	Board.prototype.edgeCollision = function(){
 	  var head = this.snake.head();
-	  return (head[0] > 0 || head[0] < this.bound
-	    || head[1] > 0 || head[1] < this.bound );
+	  return (head[0] < 0 || head[1] < 0) ||
+	    (head[0] > this.bound || head[1] > this.bound);
 	};
 	
 	module.exports = Board;
@@ -156,20 +200,17 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	
-	
 	function Snake(){
 	  this.DIRS = ['n', 'e', 's', 'w'];
 	  this.MOVES = { n: [-1,0], e: [0,1], s: [1,0], w: [0,-1]};
-	  this.direction = 'w';
+	  this.direction = 'e';
 	  this.segments = [
-	    [5,3],
-	    [5,4],
 	    [5,5],
-	    [5,6],
-	    [5,7]
+	    [5,4],
+	    [5,3],
 	  ];
 	  this.oldTail = [0,0];
+	  this.unitsToGrow = 0;
 	}
 	
 	Snake.prototype.turn = function (dir) {
@@ -187,10 +228,20 @@
 	  return(this.segments[0]);
 	};
 	
+	Snake.prototype.grow = function (num) {
+	  this.unitsToGrow += num;
+	};
+	
 	Snake.prototype.move = function () {
 	  var move = this.MOVES[this.direction];
 	  var newHead = this.plus(this.head(), move);
-	  this.oldTail = this.segments.pop();
+	
+	  if (this.unitsToGrow > 0){
+	    this.oldTail = null;
+	    this.unitsToGrow -= 1;
+	  } else {
+	    this.oldTail = this.segments.pop();
+	  }
 	  this.segments.unshift(newHead);
 	};
 	
