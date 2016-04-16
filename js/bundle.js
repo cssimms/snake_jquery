@@ -115,6 +115,13 @@
 	  }, 200);
 	};
 	
+	
+	// this isn't used yet... later trying to implement increaing speed
+	View.prototype.relativeSpeed = function () {
+	  var snakeLength = this.snake.segments.length;
+	  return 100 * snakeLength;
+	};
+	
 	View.prototype.setKeyBindings = function () {
 	  var that = this;
 	  key('left', function(){
@@ -151,7 +158,7 @@
 	function Board(bound){
 	  this.snake = new Snake();
 	  this.bound = bound;
-	  this.numOfApples = 2;
+	  this.numOfApples = 20;
 	  this.apples = [];
 	  this.oldApples = [];
 	  this.placeApples();
@@ -170,12 +177,10 @@
 	};
 	
 	Board.prototype.registerApples = function () {
+	  this.oldApples = [];
 	  for (var i = 0; i < this.apples.length; i++){
-	    var appleX = this.apples[i][0];
-	    var appleY = this.apples[i][1];
-	    var head = this.snake.head();
 	
-	    if (appleX === head[0] && appleY === head[1]){
+	    if (this.snake.equals(this.snake.head(), this.apples[i])){
 	      this.snake.grow(3);
 	      this.oldApples.push(this.apples.splice(i, 1));
 	      this.placeApples();
@@ -246,7 +251,12 @@
 	};
 	
 	Snake.prototype.isCollided = function () {
-	  return (this.segments.indexOf(this.head(), 1) !== -1);
+	  for (var i = 1; i < this.segments; i++){
+	    if (this.equals(this.segments[i], this.head())){
+	      return true;
+	    }
+	  }
+	  return false;
 	};
 	
 	Snake.prototype.plus = function (pos1, pos2) {

@@ -44,7 +44,12 @@ Snake.prototype.move = function () {
 };
 
 Snake.prototype.isCollided = function () {
-  return (this.segments.indexOf(this.head(), 1) !== -1);
+  for (var i = 1; i < this.segments; i++){
+    if (this.equals(this.segments[i], this.head())){
+      return true;
+    }
+  }
+  return false;
 };
 
 Snake.prototype.plus = function (pos1, pos2) {

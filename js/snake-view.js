@@ -56,6 +56,13 @@ View.prototype.startGame = function () {
   }, 200);
 };
 
+
+// this isn't used yet... later trying to implement increaing speed
+View.prototype.relativeSpeed = function () {
+  var snakeLength = this.snake.segments.length;
+  return 100 * snakeLength;
+};
+
 View.prototype.setKeyBindings = function () {
   var that = this;
   key('left', function(){

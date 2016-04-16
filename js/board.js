@@ -3,7 +3,7 @@ var Snake = require("./snake");
 function Board(bound){
   this.snake = new Snake();
   this.bound = bound;
-  this.numOfApples = 2;
+  this.numOfApples = 20;
   this.apples = [];
   this.oldApples = [];
   this.placeApples();
@@ -22,12 +22,10 @@ Board.prototype.generateRandPos = function () {
 };
 
 Board.prototype.registerApples = function () {
+  this.oldApples = [];
   for (var i = 0; i < this.apples.length; i++){
-    var appleX = this.apples[i][0];
-    var appleY = this.apples[i][1];
-    var head = this.snake.head();
 
-    if (appleX === head[0] && appleY === head[1]){
+    if (this.snake.equals(this.snake.head(), this.apples[i])){
       this.snake.grow(3);
       this.oldApples.push(this.apples.splice(i, 1));
       this.placeApples();
