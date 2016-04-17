@@ -112,7 +112,7 @@
 	    that.board.registerApples();
 	    that.checkOver(animation);
 	    that.render();
-	  }, 100);
+	  }, 10);
 	};
 	
 	
@@ -216,7 +216,8 @@
 	  ];
 	  this.oldTail = [0,0];
 	  this.unitsToGrow = 0;
-	  this.speed = 10;
+	  this.speedMetric = 1; // how many cycles until executeMove
+	  this.moveCount = 0;
 	}
 	
 	Snake.prototype.turn = function (dir) {
@@ -239,16 +240,31 @@
 	};
 	
 	Snake.prototype.move = function () {
+	  if (this.moveCount >= this.speedMetric){
+	    this.executeMove();
+	    this.moveCount = 0;
+	  } else {
+	    this.moveCount += 1;
+	  }
+	};
+	
+	Snake.prototype.executeMove = function(){
 	  var move = this.MOVES[this.direction];
 	  var newHead = this.plus(this.head(), move);
 	
 	  if (this.unitsToGrow > 0){
 	    this.oldTail = null;
 	    this.unitsToGrow -= 1;
+	
+	    //updates speed based on snake length
+	    if (this.segments.length % 5 === 0){
+	      this.speedMetric += 1;
+	    }
 	  } else {
 	    this.oldTail = this.segments.pop();
 	  }
 	  this.segments.unshift(newHead);
+	
 	};
 	
 	Snake.prototype.isCollided = function () {
