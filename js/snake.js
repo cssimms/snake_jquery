@@ -9,6 +9,7 @@ function Snake(){
   ];
   this.oldTail = [0,0];
   this.unitsToGrow = 0;
+  this.speed = 10;
 }
 
 Snake.prototype.turn = function (dir) {
@@ -44,7 +45,7 @@ Snake.prototype.move = function () {
 };
 
 Snake.prototype.isCollided = function () {
-  for (var i = 1; i < this.segments; i++){
+  for (var i = 1; i < this.segments.length; i++){
     if (this.equals(this.segments[i], this.head())){
       return true;
     }
@@ -64,6 +65,7 @@ Snake.prototype.equals = function (pos1, pos2) {
 };
 
 Snake.prototype.segmentsInclude = function(pos){
+  // if (this.)
   for(var i = 0; i < this.segments.length; i++){
     if (this.equals(this.segments[i], pos)){
       return true;

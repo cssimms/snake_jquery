@@ -112,7 +112,7 @@
 	    that.board.registerApples();
 	    that.checkOver(animation);
 	    that.render();
-	  }, 200);
+	  }, 100);
 	};
 	
 	
@@ -216,6 +216,7 @@
 	  ];
 	  this.oldTail = [0,0];
 	  this.unitsToGrow = 0;
+	  this.speed = 10;
 	}
 	
 	Snake.prototype.turn = function (dir) {
@@ -251,7 +252,7 @@
 	};
 	
 	Snake.prototype.isCollided = function () {
-	  for (var i = 1; i < this.segments; i++){
+	  for (var i = 1; i < this.segments.length; i++){
 	    if (this.equals(this.segments[i], this.head())){
 	      return true;
 	    }
@@ -271,6 +272,7 @@
 	};
 	
 	Snake.prototype.segmentsInclude = function(pos){
+	  // if (this.)
 	  for(var i = 0; i < this.segments.length; i++){
 	    if (this.equals(this.segments[i], pos)){
 	      return true;

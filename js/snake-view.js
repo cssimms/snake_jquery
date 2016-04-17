@@ -53,7 +53,7 @@ View.prototype.startGame = function () {
     that.board.registerApples();
     that.checkOver(animation);
     that.render();
-  }, 200);
+  }, 100);
 };
 
 
