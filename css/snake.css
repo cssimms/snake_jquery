@@ -43,11 +43,15 @@ li {
 }
 
 .snake{
-  background-color: forestgreen;
+  background-color: purple;
 }
 
 .apple{
   background-color: red;
+}
+
+.super-apple {
+  background-color: limegreen;
 }
 
 .group:after {

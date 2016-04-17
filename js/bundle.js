@@ -102,6 +102,8 @@
 	  oldApples.forEach(function (apple){
 	    $("li[pos='" + apple + "']").removeClass("apple");
 	  });
+	  $("li[pos='" + this.board.superApple + "']").addClass("super-apple");
+	  $("li[pos='" + this.board.oldSuperApple + "']").removeClass("super-apple");
 	
 	};
 	
@@ -109,17 +111,10 @@
 	  var that = this;
 	  var animation = setInterval(function(){
 	    that.snake.move();
-	    that.board.registerApples();
+	    that.board.registerFrame();
 	    that.checkOver(animation);
 	    that.render();
-	  }, 10);
-	};
-	
-	
-	// this isn't used yet... later trying to implement increaing speed
-	View.prototype.relativeSpeed = function () {
-	  var snakeLength = this.snake.segments.length;
-	  return 100 * snakeLength;
+	  }, 1);
 	};
 	
 	View.prototype.setKeyBindings = function () {
@@ -158,16 +153,26 @@
 	function Board(bound){
 	  this.snake = new Snake();
 	  this.bound = bound;
-	  this.numOfApples = 20;
+	  this.maxApples = 20;
 	  this.apples = [];
+	  this.superApple = [];
 	  this.oldApples = [];
 	  this.placeApples();
+	  this.frameCount = 0;
 	}
 	
 	Board.prototype.placeApples = function () {
-	  while (this.apples.length < this.numOfApples){
+	  while (this.apples.length < this.maxApples){
 	    this.apples.push(this.generateRandPos());
 	  }
+	  if ((this.frameCount >= 489)) {
+	    this.placeSuperApple();
+	  }
+	};
+	
+	Board.prototype.placeSuperApple = function(){
+	  this.oldSuperApple = this.superApple;
+	  this.superApple = this.generateRandPos();
 	};
 	
 	Board.prototype.generateRandPos = function () {
@@ -176,16 +181,20 @@
 	  return [x,y];
 	};
 	
-	Board.prototype.registerApples = function () {
+	Board.prototype.registerFrame = function () {
+	  if (this.frameCount >= 491){
+	    this.frameCount = 0;
+	  }
 	  this.oldApples = [];
 	  for (var i = 0; i < this.apples.length; i++){
 	
 	    if (this.snake.equals(this.snake.head(), this.apples[i])){
 	      this.snake.grow(3);
 	      this.oldApples.push(this.apples.splice(i, 1));
-	      this.placeApples();
 	    }
 	  }
+	  this.placeApples();
+	  this.frameCount += 1;
 	};
 	
 	Board.prototype.isOver = function () {
@@ -216,7 +225,7 @@
 	  ];
 	  this.oldTail = [0,0];
 	  this.unitsToGrow = 0;
-	  this.speedMetric = 1; // how many cycles until executeMove
+	  this.speedMetric = 30; // how many cycles until executeMove
 	  this.moveCount = 0;
 	}
 	
@@ -244,7 +253,7 @@
 	    this.executeMove();
 	    this.moveCount = 0;
 	  } else {
-	    this.moveCount += 1;
+	      this.moveCount += 1;
 	  }
 	};
 	
@@ -257,8 +266,8 @@
 	    this.unitsToGrow -= 1;
 	
 	    //updates speed based on snake length
-	    if (this.segments.length % 5 === 0){
-	      this.speedMetric += 1;
+	    if ((this.segments.length % 5 === 0) ){
+	      this.speedMetric -= 3;
 	    }
 	  } else {
 	    this.oldTail = this.segments.pop();
@@ -288,7 +297,6 @@
 	};
 	
 	Snake.prototype.segmentsInclude = function(pos){
-	  // if (this.)
 	  for(var i = 0; i < this.segments.length; i++){
 	    if (this.equals(this.segments[i], pos)){
 	      return true;

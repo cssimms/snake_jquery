@@ -3,16 +3,26 @@ var Snake = require("./snake");
 function Board(bound){
   this.snake = new Snake();
   this.bound = bound;
-  this.numOfApples = 20;
+  this.maxApples = 20;
   this.apples = [];
+  this.superApple = [];
   this.oldApples = [];
   this.placeApples();
+  this.frameCount = 0;
 }
 
 Board.prototype.placeApples = function () {
-  while (this.apples.length < this.numOfApples){
+  while (this.apples.length < this.maxApples){
     this.apples.push(this.generateRandPos());
   }
+  if ((this.frameCount >= 489)) {
+    this.placeSuperApple();
+  }
+};
+
+Board.prototype.placeSuperApple = function(){
+  this.oldSuperApple = this.superApple;
+  this.superApple = this.generateRandPos();
 };
 
 Board.prototype.generateRandPos = function () {
@@ -21,16 +31,20 @@ Board.prototype.generateRandPos = function () {
   return [x,y];
 };
 
-Board.prototype.registerApples = function () {
+Board.prototype.registerFrame = function () {
+  if (this.frameCount >= 491){
+    this.frameCount = 0;
+  }
   this.oldApples = [];
   for (var i = 0; i < this.apples.length; i++){
 
     if (this.snake.equals(this.snake.head(), this.apples[i])){
       this.snake.grow(3);
       this.oldApples.push(this.apples.splice(i, 1));
-      this.placeApples();
     }
   }
+  this.placeApples();
+  this.frameCount += 1;
 };
 
 Board.prototype.isOver = function () {

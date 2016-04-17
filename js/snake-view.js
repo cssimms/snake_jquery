@@ -43,6 +43,8 @@ View.prototype.render = function () {
   oldApples.forEach(function (apple){
     $("li[pos='" + apple + "']").removeClass("apple");
   });
+  $("li[pos='" + this.board.superApple + "']").addClass("super-apple");
+  $("li[pos='" + this.board.oldSuperApple + "']").removeClass("super-apple");
 
 };
 
@@ -50,17 +52,10 @@ View.prototype.startGame = function () {
   var that = this;
   var animation = setInterval(function(){
     that.snake.move();
-    that.board.registerApples();
+    that.board.registerFrame();
     that.checkOver(animation);
     that.render();
-  }, 10);
-};
-
-
-// this isn't used yet... later trying to implement increaing speed
-View.prototype.relativeSpeed = function () {
-  var snakeLength = this.snake.segments.length;
-  return 100 * snakeLength;
+  }, 1);
 };
 
 View.prototype.setKeyBindings = function () {

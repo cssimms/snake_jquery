@@ -9,7 +9,7 @@ function Snake(){
   ];
   this.oldTail = [0,0];
   this.unitsToGrow = 0;
-  this.speedMetric = 1; // how many cycles until executeMove
+  this.speedMetric = 30; // how many cycles until executeMove
   this.moveCount = 0;
 }
 
@@ -37,7 +37,7 @@ Snake.prototype.move = function () {
     this.executeMove();
     this.moveCount = 0;
   } else {
-    this.moveCount += 1;
+      this.moveCount += 1;
   }
 };
 
@@ -50,8 +50,8 @@ Snake.prototype.executeMove = function(){
     this.unitsToGrow -= 1;
 
     //updates speed based on snake length
-    if (this.segments.length % 5 === 0){
-      this.speedMetric += 1;
+    if ((this.segments.length % 5 === 0) ){
+      this.speedMetric -= 3;
     }
   } else {
     this.oldTail = this.segments.pop();
@@ -81,7 +81,6 @@ Snake.prototype.equals = function (pos1, pos2) {
 };
 
 Snake.prototype.segmentsInclude = function(pos){
-  // if (this.)
   for(var i = 0; i < this.segments.length; i++){
     if (this.equals(this.segments[i], pos)){
       return true;
