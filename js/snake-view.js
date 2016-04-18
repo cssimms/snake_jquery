@@ -55,7 +55,7 @@ View.prototype.startGame = function () {
     that.board.registerFrame();
     that.checkOver(animation);
     that.render();
-  }, 1);
+  }, 20);
 };
 
 View.prototype.setKeyBindings = function () {

@@ -9,7 +9,7 @@ function Snake(){
   ];
   this.oldTail = [0,0];
   this.unitsToGrow = 0;
-  this.speedMetric = 30; // how many cycles until executeMove
+  this.speedMetric = 20; // how many cycles until executeMove
   this.moveCount = 0;
 }
 
@@ -30,6 +30,7 @@ Snake.prototype.head = function(){
 
 Snake.prototype.grow = function (num) {
   this.unitsToGrow += num;
+  debugger
 };
 
 Snake.prototype.move = function () {

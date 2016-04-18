@@ -1,6 +1,6 @@
 Current Bugs:
 - turning quickly in place can result in self-collision
-
+- superApple counting as hit for every cycle, instead of one executeMove per snake
 
 TODO:
 -finish superApples - create a snake effect (speed? length?)
@@ -13,7 +13,7 @@ Long-Term Goals:
   .apple
   .superApple
   .length upgrade(good in two player, bad in one player)
-
+  .STRAIGHT SNAKE
 
 -create menu (difficulty, num of players)
 -two players!

@@ -114,7 +114,7 @@
 	    that.board.registerFrame();
 	    that.checkOver(animation);
 	    that.render();
-	  }, 1);
+	  }, 20);
 	};
 	
 	View.prototype.setKeyBindings = function () {
@@ -165,9 +165,7 @@
 	  while (this.apples.length < this.maxApples){
 	    this.apples.push(this.generateRandPos());
 	  }
-	  if ((this.frameCount >= 489)) {
-	    this.placeSuperApple();
-	  }
+	
 	};
 	
 	Board.prototype.placeSuperApple = function(){
@@ -175,12 +173,15 @@
 	  this.superApple = this.generateRandPos();
 	};
 	
-	Board.prototype.generateRandPos = function () {
-	  var x = Math.floor(Math.random() * this.bound);
-	  var y = Math.floor(Math.random() * this.bound);
-	  return [x,y];
+	Board.prototype.placePowerUps = function () {
+	  this.placeApples();
+	
+	  if ((this.frameCount >= 489)) {
+	    this.placeSuperApple();
+	  }
 	};
 	
+	// track frame count, register powerups,
 	Board.prototype.registerFrame = function () {
 	  if (this.frameCount >= 491){
 	    this.frameCount = 0;
@@ -193,7 +194,11 @@
 	      this.oldApples.push(this.apples.splice(i, 1));
 	    }
 	  }
-	  this.placeApples();
+	  if (this.snake.equals(this.snake.head(), this.superApple)){
+	    this.snake.grow(10);
+	    this.oldSuperApple = this.superApple;
+	  }
+	  this.placePowerUps();
 	  this.frameCount += 1;
 	};
 	
@@ -207,6 +212,11 @@
 	    (head[0] > this.bound || head[1] > this.bound);
 	};
 	
+	Board.prototype.generateRandPos = function () {
+	  var x = Math.floor(Math.random() * this.bound);
+	  var y = Math.floor(Math.random() * this.bound);
+	  return [x,y];
+	};
 	module.exports = Board;
 
 
@@ -225,7 +235,7 @@
 	  ];
 	  this.oldTail = [0,0];
 	  this.unitsToGrow = 0;
-	  this.speedMetric = 30; // how many cycles until executeMove
+	  this.speedMetric = 20; // how many cycles until executeMove
 	  this.moveCount = 0;
 	}
 	
@@ -246,6 +256,7 @@
 	
 	Snake.prototype.grow = function (num) {
 	  this.unitsToGrow += num;
+	  debugger
 	};
 	
 	Snake.prototype.move = function () {

@@ -15,9 +15,7 @@ Board.prototype.placeApples = function () {
   while (this.apples.length < this.maxApples){
     this.apples.push(this.generateRandPos());
   }
-  if ((this.frameCount >= 489)) {
-    this.placeSuperApple();
-  }
+
 };
 
 Board.prototype.placeSuperApple = function(){
@@ -25,12 +23,15 @@ Board.prototype.placeSuperApple = function(){
   this.superApple = this.generateRandPos();
 };
 
-Board.prototype.generateRandPos = function () {
-  var x = Math.floor(Math.random() * this.bound);
-  var y = Math.floor(Math.random() * this.bound);
-  return [x,y];
+Board.prototype.placePowerUps = function () {
+  this.placeApples();
+
+  if ((this.frameCount >= 489)) {
+    this.placeSuperApple();
+  }
 };
 
+// track frame count, register powerups,
 Board.prototype.registerFrame = function () {
   if (this.frameCount >= 491){
     this.frameCount = 0;
@@ -43,7 +44,11 @@ Board.prototype.registerFrame = function () {
       this.oldApples.push(this.apples.splice(i, 1));
     }
   }
-  this.placeApples();
+  if (this.snake.equals(this.snake.head(), this.superApple)){
+    this.snake.grow(10);
+    this.oldSuperApple = this.superApple;
+  }
+  this.placePowerUps();
   this.frameCount += 1;
 };
 
@@ -57,4 +62,9 @@ Board.prototype.edgeCollision = function(){
     (head[0] > this.bound || head[1] > this.bound);
 };
 
+Board.prototype.generateRandPos = function () {
+  var x = Math.floor(Math.random() * this.bound);
+  var y = Math.floor(Math.random() * this.bound);
+  return [x,y];
+};
 module.exports = Board;
