@@ -58,7 +58,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Board = __webpack_require__(2);
-	var key = __webpack_require__(4);
+	var key = __webpack_require__(5);
 	
 	function View($el){
 	  this.$el = $el;
@@ -320,7 +320,8 @@
 
 
 /***/ },
-/* 4 */
+/* 4 */,
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//     keymaster.js
