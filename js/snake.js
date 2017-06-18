@@ -1,12 +1,10 @@
+let Config = require("./app_config");
+
 function Snake(){
   this.DIRS = ['n', 'e', 's', 'w'];
   this.MOVES = { n: [-1,0], e: [0,1], s: [1,0], w: [0,-1]};
-  this.direction = 'e';
-  this.segments = [
-    [5,5],
-    [5,4],
-    [5,3],
-  ];
+  this.direction = Config.start_direction;
+  this.segments = Config.start_segments;
   this.oldTail = [0,0];
   this.unitsToGrow = 0;
   this.speedMetric = 20; // how many cycles until executeMove
@@ -62,7 +60,7 @@ Snake.prototype.executeMove = function(){
 };
 
 Snake.prototype.isCollided = function () {
-  for (var i = 1; i < this.segments.length; i++){
+  for (let i = 1; i < this.segments.length; i++){
     if (this.equals(this.segments[i], this.head())){
       return true;
     }
@@ -82,7 +80,7 @@ Snake.prototype.equals = function (pos1, pos2) {
 };
 
 Snake.prototype.segmentsInclude = function(pos){
-  for(var i = 0; i < this.segments.length; i++){
+  for(let i = 0; i < this.segments.length; i++){
     if (this.equals(this.segments[i], pos)){
       return true;
     }

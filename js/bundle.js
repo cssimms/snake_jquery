@@ -58,8 +58,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Board = __webpack_require__(2);
-	var key = __webpack_require__(4);
-	var Config = __webpack_require__(5);
+	var key = __webpack_require__(5);
+	var Config = __webpack_require__(4);
 	
 	function View($el){
 	  this.$el = $el;
@@ -150,92 +150,95 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Snake = __webpack_require__(3);
-	var Config = __webpack_require__(5);
+	var Config = __webpack_require__(4);
 	
 	function Board(bound){
-	  this.snake = new Snake();
-	  this.bound = bound;
-	  this.maxApples = Config.max_apples;
-	  this.apples = [];
-	  this.superApple = [];
-	  this.oldApples = [];
-	  this.placeApples();
-	  this.frameCount = 0;
-	  this.frameCycle = Config.frame_cycle;
+		this.snake = new Snake();
+		this.bound = bound;
+		this.maxApples = Config.max_apples;
+		this.apples = [];
+		this.superApple = [];
+		this.oldApples = [];
+		this.placeApples();
+		this.frameCount = 0;
+		this.frameCycle = Config.frame_cycle;
 	}
 	
 	Board.prototype.placeApples = function () {
-	  while (this.apples.length < this.maxApples){
-	    this.apples.push(this.generateRandPos());
-	  }
-	
+		while (this.apples.length < this.maxApples){
+			this.apples.push(this.generateRandPos({ non_snake: true }));
+		}
 	};
 	
 	Board.prototype.placeSuperApple = function(){
-	  this.oldSuperApple = this.superApple;
-	  this.superApple = this.generateRandPos();
+		this.oldSuperApple = this.superApple;
+		this.superApple = this.generateRandPos({ non_snake: true });
 	};
 	
 	Board.prototype.placePowerUps = function () {
-	  this.placeApples();
+		this.placeApples();
 	
-	  if ((this.frameCount >= 489)) {
-	    this.placeSuperApple();
-	  }
+		if ((this.frameCount >= 489)) {
+			this.placeSuperApple();
+		}
 	};
 	
 	// track frame count, register powerups,
 	Board.prototype.registerFrame = function () {
-	  if (this.frameCount >= this.frameCycle){
-	    this.frameCount = 0;
-	  }
-	  this.oldApples = [];
-	  for (var i = 0; i < this.apples.length; i++){
+		if (this.frameCount >= this.frameCycle){
+			this.frameCount = 0;
+		}
+		this.oldApples = [];
+		for (var i = 0; i < this.apples.length; i++){
 	
-	    if (this.snake.equals(this.snake.head(), this.apples[i])){
-	      this.snake.grow(3);
-	      this.oldApples.push(this.apples.splice(i, 1));
-	    }
-	  }
-	  if (this.snake.equals(this.snake.head(), this.superApple)){
-	    this.snake.grow(10);
-	    this.oldSuperApple = this.superApple;
-	  }
-	  this.placePowerUps();
-	  this.frameCount += 1;
+			if (this.snake.equals(this.snake.head(), this.apples[i])){
+				this.snake.grow(3);
+				this.oldApples.push(this.apples.splice(i, 1));
+			}
+		}
+		if (this.snake.equals(this.snake.head(), this.superApple)){
+			this.snake.grow(10);
+			this.oldSuperApple = this.superApple;
+		}
+		this.placePowerUps();
+		this.frameCount += 1;
 	};
 	
 	Board.prototype.isOver = function () {
-	  return (this.snake.isCollided() || this.edgeCollision());
+		return (this.snake.isCollided() || this.edgeCollision());
 	};
 	
 	Board.prototype.edgeCollision = function(){
-	  var head = this.snake.head();
-	  return (head[0] < 0 || head[1] < 0) ||
-	    (head[0] > this.bound || head[1] > this.bound);
+		var head = this.snake.head();
+		return (head[0] < 0 || head[1] < 0) ||
+			(head[0] > this.bound || head[1] > this.bound);
 	};
 	
-	Board.prototype.generateRandPos = function () {
-	  var x = Math.floor(Math.random() * this.bound);
-	  var y = Math.floor(Math.random() * this.bound);
-	  return [x,y];
+	Board.prototype.generateRandPos = function (params) {
+	    let x, y;
+	
+	    do {
+	        x = Math.floor(Math.random() * this.bound);
+	        y = Math.floor(Math.random() * this.bound);
+	    } while (this.snake.segmentsInclude([x,y]));
+	
+		return [x,y];
 	};
+	
 	module.exports = Board;
 
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	let Config = __webpack_require__(4);
+	
 	function Snake(){
 	  this.DIRS = ['n', 'e', 's', 'w'];
 	  this.MOVES = { n: [-1,0], e: [0,1], s: [1,0], w: [0,-1]};
-	  this.direction = 'e';
-	  this.segments = [
-	    [5,5],
-	    [5,4],
-	    [5,3],
-	  ];
+	  this.direction = Config.start_direction;
+	  this.segments = Config.start_segments;
 	  this.oldTail = [0,0];
 	  this.unitsToGrow = 0;
 	  this.speedMetric = 20; // how many cycles until executeMove
@@ -291,7 +294,7 @@
 	};
 	
 	Snake.prototype.isCollided = function () {
-	  for (var i = 1; i < this.segments.length; i++){
+	  for (let i = 1; i < this.segments.length; i++){
 	    if (this.equals(this.segments[i], this.head())){
 	      return true;
 	    }
@@ -311,7 +314,7 @@
 	};
 	
 	Snake.prototype.segmentsInclude = function(pos){
-	  for(var i = 0; i < this.segments.length; i++){
+	  for(let i = 0; i < this.segments.length; i++){
 	    if (this.equals(this.segments[i], pos)){
 	      return true;
 	    }
@@ -324,6 +327,24 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	let Config = {
+	    board_dimension: 20,
+	
+	    frame_cycle: 491,
+	
+	    max_apples: 5,
+	
+	    start_direction: 'e',
+	
+	    start_segments: [ [5,5], [5,4], [5,3] ]
+	}
+	module.exports = Config;
+
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//     keymaster.js
@@ -622,20 +643,6 @@
 	  if(true) module.exports = assignKey;
 	
 	})(this);
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	let Config = {
-	    board_dimension: 20,
-	
-	    frame_cycle: 491,
-	
-	    max_apples: 5
-	}
-	module.exports = Config;
 
 
 /***/ }
