@@ -59,10 +59,11 @@
 
 	var Board = __webpack_require__(2);
 	var key = __webpack_require__(4);
+	var Config = __webpack_require__(5);
 	
 	function View($el){
 	  this.$el = $el;
-	  this.board = new Board(60);
+	  this.board = new Board(Config.board_dimension);
 	  this.snake = this.board.snake;
 	  this.setupBoard();
 	  this.setKeyBindings();
@@ -149,16 +150,18 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Snake = __webpack_require__(3);
+	var Config = __webpack_require__(5);
 	
 	function Board(bound){
 	  this.snake = new Snake();
 	  this.bound = bound;
-	  this.maxApples = 20;
+	  this.maxApples = Config.max_apples;
 	  this.apples = [];
 	  this.superApple = [];
 	  this.oldApples = [];
 	  this.placeApples();
 	  this.frameCount = 0;
+	  this.frameCycle = Config.frame_cycle;
 	}
 	
 	Board.prototype.placeApples = function () {
@@ -183,7 +186,7 @@
 	
 	// track frame count, register powerups,
 	Board.prototype.registerFrame = function () {
-	  if (this.frameCount >= 491){
+	  if (this.frameCount >= this.frameCycle){
 	    this.frameCount = 0;
 	  }
 	  this.oldApples = [];
@@ -619,6 +622,20 @@
 	  if(true) module.exports = assignKey;
 	
 	})(this);
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	let Config = {
+	    board_dimension: 20,
+	
+	    frame_cycle: 491,
+	
+	    max_apples: 5
+	}
+	module.exports = Config;
 
 
 /***/ }

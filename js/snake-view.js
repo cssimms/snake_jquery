@@ -1,9 +1,10 @@
 var Board = require("./board");
 var key = require("../vendor/keymaster");
+var Config = require("./app_config");
 
 function View($el){
   this.$el = $el;
-  this.board = new Board(60);
+  this.board = new Board(Config.board_dimension);
   this.snake = this.board.snake;
   this.setupBoard();
   this.setKeyBindings();

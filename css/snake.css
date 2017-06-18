@@ -39,7 +39,7 @@ li {
   vertical-align: top;
   float: left;
   list-style-type: none;
- // border: 1px solid black;
+  border: 1px solid black;
   height: 100%;
   width: 12px;
 }

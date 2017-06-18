@@ -1,14 +1,16 @@
 var Snake = require("./snake");
+var Config = require("./app_config");
 
 function Board(bound){
   this.snake = new Snake();
   this.bound = bound;
-  this.maxApples = 20;
+  this.maxApples = Config.max_apples;
   this.apples = [];
   this.superApple = [];
   this.oldApples = [];
   this.placeApples();
   this.frameCount = 0;
+  this.frameCycle = Config.frame_cycle;
 }
 
 Board.prototype.placeApples = function () {
@@ -33,7 +35,7 @@ Board.prototype.placePowerUps = function () {
 
 // track frame count, register powerups,
 Board.prototype.registerFrame = function () {
-  if (this.frameCount >= 491){
+  if (this.frameCount >= this.frameCycle){
     this.frameCount = 0;
   }
   this.oldApples = [];
