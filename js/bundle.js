@@ -60,6 +60,7 @@
 	var Board = __webpack_require__(2);
 	var key = __webpack_require__(5);
 	var Config = __webpack_require__(4);
+
 	
 	function View($el){
 	  this.$el = $el;
@@ -326,6 +327,7 @@
 
 
 /***/ },
+
 /* 4 */
 /***/ function(module, exports) {
 
@@ -344,6 +346,7 @@
 
 
 /***/ },
+
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
