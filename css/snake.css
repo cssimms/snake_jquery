@@ -8,6 +8,7 @@ html, body, figure, ul, li, title, h1 {
   width: 100%;
   height: auto
 }
+
 body{
   background-color: darkblue;
 }
@@ -16,6 +17,7 @@ figure {
   height: 700px;
   width: 900px;
   margin: auto;
+  border: 1px solid black;
 }
 
 h1 {
@@ -44,10 +46,12 @@ li {
 
 .snake{
   background-color: purple;
+  border: 1px solid black;
 }
 
 .apple{
   background-color: red;
+  border: 1px solid black;
 }
 
 .super-apple {

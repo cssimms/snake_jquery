@@ -1,6 +1,8 @@
 Current Bugs:
 - superApple counting as hit for every cycle, instead of one executeMove per snake
 - turning quickly in place can result in self-collision
+- when border of li cells is turned off, matrix spacing is incorrect and results in a
+	broken board. need to dynamically generate board spacing 
 
 TODO:
 -finish superApples - create a snake effect (speed? length?)
