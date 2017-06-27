@@ -1,7 +1,9 @@
+let Config = require ("./app_config"); 
+
 function Snake(){
   this.DIRS = ['n', 'e', 's', 'w'];
   this.MOVES = { n: [-1,0], e: [0,1], s: [1,0], w: [0,-1]};
-  this.direction = 'e';
+  this.direction = Config.starting_direction;
   this.segments = [
     [5,5],
     [5,4],
@@ -19,8 +21,8 @@ Snake.prototype.turn = function (dir) {
 };
 
 Snake.prototype.isOpposite = function (dir) {
-  var thisInd = this.DIRS.indexOf(this.direction);
-  var dirInd = this.DIRS.indexOf(dir);
+  let thisInd = this.DIRS.indexOf(this.direction);
+  let dirInd = this.DIRS.indexOf(dir);
   return (thisInd % 2 === dirInd % 2);
 };
 
@@ -30,7 +32,6 @@ Snake.prototype.head = function(){
 
 Snake.prototype.grow = function (num) {
   this.unitsToGrow += num;
-  debugger
 };
 
 Snake.prototype.move = function () {
@@ -43,8 +44,8 @@ Snake.prototype.move = function () {
 };
 
 Snake.prototype.executeMove = function(){
-  var move = this.MOVES[this.direction];
-  var newHead = this.plus(this.head(), move);
+  let move = this.MOVES[this.direction];
+  let newHead = this.plus(this.head(), move);
 
   if (this.unitsToGrow > 0){
     this.oldTail = null;
@@ -62,7 +63,7 @@ Snake.prototype.executeMove = function(){
 };
 
 Snake.prototype.isCollided = function () {
-  for (var i = 1; i < this.segments.length; i++){
+  for (let i = 1; i < this.segments.length; i++){
     if (this.equals(this.segments[i], this.head())){
       return true;
     }
@@ -82,7 +83,7 @@ Snake.prototype.equals = function (pos1, pos2) {
 };
 
 Snake.prototype.segmentsInclude = function(pos){
-  for(var i = 0; i < this.segments.length; i++){
+  for(let i = 0; i < this.segments.length; i++){
     if (this.equals(this.segments[i], pos)){
       return true;
     }
