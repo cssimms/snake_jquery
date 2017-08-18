@@ -1,15 +1,14 @@
-var jasmineWebpackPlugin = require('jasmine-webpack-plugin');
+var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
  
 module.exports = {
   context: __dirname,
-  entry: ['/spec/specRoot.js'],
-  plugins: [new JasmineWebpackPlugin()]
+  entry: ['./spec/specRoot.js'],
+  plugins: [new JasmineWebpackPlugin()],
   output: {
     path: ".",
-    filename: "test.js", //need to figure out how this works
+    filename: "_specRunner.html",
     devtoolModuleFilenameTemplate: '[resourcePath]',
     devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
   },
-};
   devtool: 'source-maps'
 };
