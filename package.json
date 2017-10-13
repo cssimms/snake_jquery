@@ -1,0 +1,10 @@
+{
+  "name": "snake-jquery",
+  "version": "0.0.1",
+  "description": "This is my snake game. It is build using only jquery. It is a work in progress.",
+  "dependencies": {
+    "jasmine-core": "^2.8.0",
+    "jasmine-webpack-plugin": "^0.1.1",
+    "webpack": "^3.6.0"
+  }
+}
