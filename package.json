@@ -1,0 +1,25 @@
+{
+  "name": "snake_jquery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bundle.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cssimms/snake_jquery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cssimms/snake_jquery/issues"
+  },
+  "homepage": "https://github.com/cssimms/snake_jquery#readme",
+  "dependencies": {
+    "webpack-karma-jasmine": "^1.0.4"
+  }
+}
