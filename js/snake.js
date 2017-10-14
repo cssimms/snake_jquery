@@ -30,7 +30,6 @@ Snake.prototype.head = function(){
 
 Snake.prototype.grow = function (num) {
   this.unitsToGrow += num;
-  debugger
 };
 
 Snake.prototype.move = function () {
