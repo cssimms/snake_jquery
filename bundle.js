@@ -181,13 +181,12 @@ function Board(bound){
   this.oldApples = [];
   this.placeApples();
   this.frameCount = 0;
-}
+};
 
 Board.prototype.placeApples = function () {
   while (this.apples.length < this.maxApples){
     this.apples.push(this.generateRandPos());
   }
-
 };
 
 Board.prototype.placeSuperApple = function(){
